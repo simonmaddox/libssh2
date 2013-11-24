@@ -8,6 +8,16 @@ Web site: http://www.libssh2.org/
 
 Mailing list: http://cool.haxx.se/mailman/listinfo/libssh2-devel
 
+Configuring libssh2 from source
+===============================
+
+1. ./buildconf
+2. ./configure, check --help for configuration options or see below
+3. make all
+
+Configuration options
+=====================
+
 Generic installation instructions are in INSTALL.  Some ./configure
 options deserve additional comments:
 
