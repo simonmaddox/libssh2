@@ -67,7 +67,7 @@ options deserve additional comments:
 
 		libssh2 can use the Libgcrypt library
 		(http://www.gnupg.org/) for cryptographic operations.
-		Either Libgcrypt or OpenSSL is required.
+		One of Libgcrypt, OpenSSL or SecureTransport is required.
 
 		Configure will attempt to locate Libgcrypt
 		automatically.
@@ -81,13 +81,22 @@ options deserve additional comments:
 
 		libssh2 can use the OpenSSL library
 		(http://www.openssl.org) for cryptographic operations.
-		Either Libgcrypt or OpenSSL is required.
+		One of Libgcrypt, OpenSSL or SecureTransport is required.
 
 		Configure will attempt to locate OpenSSL in the
 		default location.
 
 		If your installation of OpenSSL is in another
 		location, specify it using --with-libssl-prefix.
+
+	* --with-securetransport
+
+		libssh2 can use the Mac OS X Security.framework library
+		for cryptographic operations.
+		One of Libgcrypt, OpenSSL or SecureTransport is required.
+
+		Configure will attempt to locate Security.framework in the
+		default location.
 
 	* --with-libz
 	* --without-libz
