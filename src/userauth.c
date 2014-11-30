@@ -1,6 +1,6 @@
 /* Copyright (c) 2004-2007, Sara Golemon <sarag@libssh2.org>
  * Copyright (c) 2005 Mikhail Gusarov <dottedmag@dottedmag.net>
- * Copyright (c) 2009-2011 by Daniel Stenberg
+ * Copyright (c) 2009-2014 by Daniel Stenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -211,7 +211,7 @@ userauth_password(LIBSSH2_SESSION *session,
                sizeof(session->userauth_pswd_packet_requirev_state));
 
         /*
-         * 40 = acket_type(1) + username_len(4) + service_len(4) +
+         * 40 = packet_type(1) + username_len(4) + service_len(4) +
          * service(14)"ssh-connection" + method_len(4) + method(8)"password" +
          * chgpwdbool(1) + password_len(4) */
         session->userauth_pswd_data_len = username_len + 40;
@@ -645,7 +645,7 @@ userauth_hostbased_fromfile(LIBSSH2_SESSION *session,
     if (session->userauth_host_state == libssh2_NB_state_idle) {
         const LIBSSH2_HOSTKEY_METHOD *privkeyobj;
         unsigned char *pubkeydata, *sig;
-        size_t pubkeydata_len;
+        size_t pubkeydata_len = 0;
         size_t sig_len;
         void *abstract;
         unsigned char buf[5];

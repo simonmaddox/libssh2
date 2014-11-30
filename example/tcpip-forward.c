@@ -35,11 +35,11 @@ const char *password = "";
 const char *server_ip = "127.0.0.1";
 
 const char *remote_listenhost = "localhost"; /* resolved by the server */
-unsigned int remote_wantport = 2222;
-unsigned int remote_listenport;
+int remote_wantport = 2222;
+int remote_listenport;
 
 const char *local_destip = "127.0.0.1";
-unsigned int local_destport = 22;
+int local_destport = 22;
 
 enum {
     AUTH_NONE = 0,
@@ -57,20 +57,15 @@ int main(int argc, char *argv[])
     LIBSSH2_SESSION *session;
     LIBSSH2_LISTENER *listener = NULL;
     LIBSSH2_CHANNEL *channel = NULL;
-    const char *shost;
-    unsigned int sport;
     fd_set fds;
     struct timeval tv;
     ssize_t len, wr;
     char buf[16384];
 
 #ifdef WIN32
-    char sockopt;
     WSADATA wsadata;
 
     WSAStartup(MAKEWORD(2,0), &wsadata);
-#else
-    int sockopt;
 #endif
 
     if (argc > 1)

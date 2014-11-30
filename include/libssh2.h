@@ -40,7 +40,7 @@
 #ifndef LIBSSH2_H
 #define LIBSSH2_H 1
 
-#define LIBSSH2_COPYRIGHT "2004-2012 The libssh2 project and its contributors."
+#define LIBSSH2_COPYRIGHT "2004-2014 The libssh2 project and its contributors."
 
 /* We use underscore instead of dash when appending DEV in dev versions just
    to make the BANNER define (used by src/session.c) be a valid SSH
@@ -100,11 +100,15 @@ extern "C" {
 /* Allow alternate API prefix from CFLAGS or calling app */
 #ifndef LIBSSH2_API
 # ifdef LIBSSH2_WIN32
-#  ifdef LIBSSH2_LIBRARY
-#   define LIBSSH2_API __declspec(dllexport)
+#  ifdef _WINDLL
+#   ifdef LIBSSH2_LIBRARY
+#    define LIBSSH2_API __declspec(dllexport)
+#   else
+#    define LIBSSH2_API __declspec(dllimport)
+#   endif /* LIBSSH2_LIBRARY */
 #  else
-#   define LIBSSH2_API __declspec(dllimport)
-#  endif /* LIBSSH2_LIBRARY */
+#   define LIBSSH2_API
+#  endif
 # else /* !LIBSSH2_WIN32 */
 #  define LIBSSH2_API
 # endif /* LIBSSH2_WIN32 */
@@ -281,7 +285,8 @@ typedef struct _LIBSSH2_POLLFD {
     unsigned char type; /* LIBSSH2_POLLFD_* below */
 
     union {
-        int socket; /* File descriptors -- examined with system select() call */
+        libssh2_socket_t socket; /* File descriptors -- examined with
+                                    system select() call */
         LIBSSH2_CHANNEL *channel; /* Examined by checking internal state */
         LIBSSH2_LISTENER *listener; /* Read polls only -- are inbound
                                        connections waiting to be accepted? */
