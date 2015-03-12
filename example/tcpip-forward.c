@@ -49,7 +49,7 @@ enum {
 
 int main(int argc, char *argv[])
 {
-    int rc, sock = -1, forwardsock = -1, i, auth = AUTH_NONE;
+    int rc, i, auth = AUTH_NONE;
     struct sockaddr_in sin;
     socklen_t sinlen = sizeof(sin);
     const char *fingerprint;
@@ -63,9 +63,17 @@ int main(int argc, char *argv[])
     char buf[16384];
 
 #ifdef WIN32
+    SOCKET sock = INVALID_SOCKET, forwardsock = INVALID_SOCKET;
     WSADATA wsadata;
+    int err;
 
-    WSAStartup(MAKEWORD(2,0), &wsadata);
+    err = WSAStartup(MAKEWORD(2,0), &wsadata);
+    if (err != 0) {
+        fprintf(stderr, "WSAStartup failed with error: %d\n", err);
+        return 1;
+    }
+#else
+    int sock = -1, forwardsock = -1;
 #endif
 
     if (argc > 1)
@@ -91,6 +99,18 @@ int main(int argc, char *argv[])
 
     /* Connect to SSH server */
     sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+#ifdef WIN32
+    if (sock == INVALID_SOCKET) {
+        fprintf(stderr, "failed to open socket!\n");
+        return -1;
+    }
+#else
+    if (sock == -1) {
+        perror("socket");
+        return -1;
+    }
+#endif
+
     sin.sin_family = AF_INET;
     if (INADDR_NONE == (sin.sin_addr.s_addr = inet_addr(server_ip))) {
         perror("inet_addr");
@@ -191,6 +211,18 @@ int main(int argc, char *argv[])
         "Accepted remote connection. Connecting to local server %s:%d\n",
         local_destip, local_destport);
     forwardsock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+#ifdef WIN32
+    if (forwardsock == INVALID_SOCKET) {
+        fprintf(stderr, "failed to open forward socket!\n");
+        goto shutdown;
+    }
+#else
+    if (forwardsock == -1) {
+        perror("socket");
+        goto shutdown;
+    }
+#endif
+
     sin.sin_family = AF_INET;
     sin.sin_port = htons(local_destport);
     if (INADDR_NONE == (sin.sin_addr.s_addr = inet_addr(local_destip))) {
