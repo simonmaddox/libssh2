@@ -8,13 +8,11 @@ endif
 if LIBGCRYPT
 include ../Makefile.libgcrypt.inc
 endif
-<<<<<<< HEAD
 if SECURETRANSPORT
 include ../Makefile.SecureTransport.inc
-=======
+endif
 if WINCNG
 include ../Makefile.WinCNG.inc
->>>>>>> master
 endif
 
 # Makefile.inc provides the CSOURCES and HHEADERS defines
